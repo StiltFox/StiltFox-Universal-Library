@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <vector>
 namespace StiltFox
 {
     namespace UniversalLibrary
@@ -18,6 +19,9 @@ namespace StiltFox
             virtual void disconnect() = 0;
             virtual std::unordered_set<std::string> validate(std::unordered_map<std::string, std::unordered_map<std::string, std::string>>) = 0;
             virtual std::unordered_map<std::string, std::unordered_map<std::string, std::string>> getMetaData() = 0;
+            virtual void performUpdate(std::string) = 0;
+            virtual std::vector<std::unordered_map<std::string,std::string>> performQuery(std::string) = 0;
+            virtual std::vector<std::unordered_map<std::string,std::string>> performQuery(std::string, std::vector<std::string>) = 0;
 
             bool isConnected()
             {
@@ -39,6 +43,9 @@ namespace StiltFox
             void disconnect() override;
             std::unordered_set<std::string> validate(std::unordered_map<std::string, std::unordered_map<std::string, std::string>>) override;
             std::unordered_map<std::string, std::unordered_map<std::string, std::string>> getMetaData() override;
+            void performUpdate(std::string) override;
+            std::vector<std::unordered_map<std::string, std::string>> performQuery(std::string) override;
+            std::vector<std::unordered_map<std::string, std::string>> performQuery(std::string, std::vector<std::string>) override;
 
             void operator=(std::string connection)
             {

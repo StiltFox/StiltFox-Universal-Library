@@ -1,16 +1,27 @@
 #include <filesystem>
 #include <fstream>
-#include "FileOps.hpp"
+#include <functional>
+#include "File.hpp"
 
 using namespace StiltFox::UniversalLibrary;
 using namespace std;
 
-string FileOps::readFile(string path)
+File::File(const char* filePath)
 {
-    return readFirstNCharacters(path, -1);
+    path = filePath;
 }
 
-string FileOps::readFirstNCharacters(string path, int numChars)
+void File::operator=(string filePath)
+{
+    path = filePath;
+}
+
+string File::readFile()
+{
+    return readFirstNCharacters(-1);
+}
+
+string File::readFirstNCharacters(int numChars)
 {
     string output;
 
@@ -35,4 +46,32 @@ string FileOps::readFirstNCharacters(string path, int numChars)
     }
 
     return output;
+}
+
+int File::getFileSize()
+{
+    int output = -1;
+
+    if (filesystem::exists(path))
+    {
+        ifstream stream(path, ios::in | ios::binary | ios::ate);
+        if (stream.is_open()) output = stream.tellg();
+        stream.close();
+    }
+
+    return output;
+}
+
+void File::write(string toWrite)
+{
+    ofstream stream(path, ofstream::out | ofstream::trunc);
+    if (stream.is_open()) stream << toWrite;
+    stream.close();
+}
+
+void File::append(string toWrite)
+{
+    ofstream stream(path, ofstream::out | ofstream::app);
+    if (stream.is_open()) stream << toWrite;
+    stream.close();
 }

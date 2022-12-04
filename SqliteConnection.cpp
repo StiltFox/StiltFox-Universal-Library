@@ -1,8 +1,7 @@
 #include <filesystem>
 #include <sqlite3.h>
-#include <vector>
 #include "DatabaseConnection.hpp"
-#include "FileOps.hpp"
+#include "File.hpp"
 
 using namespace StiltFox::UniversalLibrary;
 using namespace std;
@@ -108,5 +107,53 @@ unordered_set<string> SqliteConnection::validate(unordered_map<string, unordered
 
 bool SqliteConnection::checkIfValidSqlDatabase()
 {
-    return FileOps::readFirstNCharacters(connectionString, 16) == "SQLite format 3\000";
+    File dbFile = connectionString.c_str();
+    return dbFile.readFirstNCharacters(16) == "SQLite format 3\000" || dbFile.getFileSize() == 0;
+}
+
+vector<unordered_map<string,string>> SqliteConnection::performQuery(string query)
+{
+    return performQuery(query, vector<string>{});
+}
+
+vector<unordered_map<string,string>> SqliteConnection::performQuery(string query, vector<string> inputs)
+{
+    vector<unordered_map<string,string>> output;
+
+    if (connection != nullptr)
+    {
+        sqlite3* dbConnection = (sqlite3*)connection;
+        sqlite3_stmt* statement = nullptr;
+
+        if (sqlite3_prepare(dbConnection, query.c_str(), -1, &statement, NULL) == SQLITE_OK)
+        {
+            for(int x=0; x<inputs.size(); x++)
+                sqlite3_bind_text(statement, x+1, inputs[x].c_str(), inputs[x].size(), SQLITE_STATIC);
+            
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                int columns = sqlite3_data_count(statement);
+                output.push_back({});
+                for (int z=0; z < columns; z++)
+                    output[output.size()-1][(char*)sqlite3_column_name(statement, z)] = (char*)sqlite3_column_text(statement, z);
+            }
+        }
+
+        sqlite3_finalize(statement);
+    }
+
+    return output;
+}
+
+void SqliteConnection::performUpdate(string query)
+{
+    if (connection != nullptr)
+    {
+        sqlite3* dbConnection = (sqlite3*)connection;
+        sqlite3_stmt* statement = nullptr;
+
+        if (sqlite3_prepare(dbConnection, query.c_str(), -1, &statement, NULL) == SQLITE_OK) sqlite3_step(statement);
+
+        sqlite3_finalize(statement);
+    }
 }

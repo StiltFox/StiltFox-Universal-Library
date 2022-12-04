@@ -3,6 +3,10 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 include(GoogleTest)
 
+add_executable(SFCryptoTest Crypto.cpp)
+target_link_libraries(SFCryptoTest GTest::gtest_main SFCrypto)
+gtest_discover_tests(SFCryptoTest)
+
 add_executable(FileOpsTest FileOps.cpp)
 target_link_libraries(FileOpsTest GTest::gtest_main FileOps)
 gtest_discover_tests(FileOpsTest)
