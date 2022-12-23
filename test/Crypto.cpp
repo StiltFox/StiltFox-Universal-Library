@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "crypto.hpp"
+#include "SFCrypto.hpp"
 
-using namespace StiltFox::UniversalLibrary::Crypto;
+using namespace StiltFox::UniversalLibrary::SFCrypto;
 
 TEST(CRYPTO, hashSha256_returns_the_hash_of_the_data_passed_in)
 {

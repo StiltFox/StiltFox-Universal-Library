@@ -1,46 +1,37 @@
-#include <openssl/evp.h>
+#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
+#include <cryptopp/iterhash.h>
+#include <cryptopp/cryptlib.h>
+#include <cryptopp/sha.h>
+#include <cryptopp/md5.h>
 #include <sstream>
 #include <iomanip>
-#include "crypto.hpp"
+#include "SFCrypto.hpp"
 
 using namespace StiltFox::UniversalLibrary;
 using namespace std;
 
-string encrypt(string data, const EVP_MD* (*evpProvider)())
+template<typename T>
+string encrypt(string data, T hasher)
 {
-    stringstream ss;
-    EVP_MD_CTX * evp = EVP_MD_CTX_new();
+    stringstream output;
+    CryptoPP::byte* digest;
 
-    if (evp != NULL)
-    {
-        if (EVP_DigestInit_ex(evp, evpProvider(), NULL))
-        {
-            if(EVP_DigestUpdate(evp, data.c_str(), data.size()))
-            {
-                unsigned char hash[EVP_MAX_MD_SIZE];
-                unsigned int lengthOfHash = 0;
+    hasher.Update((const CryptoPP::byte*)data.c_str(),data.size());
+    digest = new CryptoPP::byte[hasher.DigestSize()];
+    hasher.Final(digest);
 
-                if(EVP_DigestFinal_ex(evp, hash, &lengthOfHash))
-                {
-                    for(unsigned int i = 0; i < lengthOfHash; ++i)
-                    {
-                        ss << hex << setw(2) << setfill('0') << (int)hash[i];
-                    }
-                }
-            }
-        }
-        EVP_MD_CTX_free(evp);
-    }
+    for (int i=0; i < hasher.DigestSize(); i++) output << hex << setw(2) << setfill('0') << (int)digest[i];
+    delete[] digest;
 
-    return ss.str();
+    return output.str();
 }
 
-string Crypto::hashSha256(string data)
+string SFCrypto::hashSha256(string data)
 {
-    return encrypt(data, &EVP_sha256);
+    return encrypt(data, CryptoPP::SHA256());
 }
 
-string Crypto::hashMd5(string data)
+string SFCrypto::hashMd5(string data)
 {
-    return encrypt(data, &EVP_md5);
+    return encrypt(data, CryptoPP::Weak1::MD5());
 }

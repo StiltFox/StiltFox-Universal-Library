@@ -161,3 +161,18 @@ TEST(SqliteConnection, performQuery_will_execute_a_parameterized_query)
     ASSERT_EQ(actual, (vector<unordered_map<string,string>>{{{"title", "scp-000"}}}));
     filesystem::remove_all(".sqliteConnection_test_database_03.db");
 }
+
+TEST(SqliteConnection, getAllData_will_get_all_data_from_the_database)
+{
+    //given we have a database connection with some data
+    setupDatabase(".sqliteConnection_test_database_04.db");
+    SqliteConnection connection = ".sqliteConnection_test_database_04.db";
+    connection.connect();
+
+    //when we get all the data
+    auto actual = connection.getAllData();
+
+    //then we get back all the data in the database
+    ASSERT_EQ(actual, (unordered_map<string,vector<unordered_map<string,string>>>{{"FILETAG",{}},{"FILEDATA",{{{"trash","0"},{"title","scp-009"},{"hashcode","abc"}},{{"trash","1"},{"title","scp-000"},{"hashcode","asd"}}}}}));
+    filesystem::remove_all(".sqliteConnection_test_database_04.db");
+}

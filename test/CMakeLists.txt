@@ -8,9 +8,9 @@ target_link_libraries(SFCryptoTest GTest::gtest_main SFCrypto)
 gtest_discover_tests(SFCryptoTest)
 
 add_executable(FileOpsTest FileOps.cpp)
-target_link_libraries(FileOpsTest GTest::gtest_main FileOps)
+target_link_libraries(FileOpsTest GTest::gtest_main File)
 gtest_discover_tests(FileOpsTest)
 
 add_executable(SqliteConnectionTest SqliteConnection.cpp)
-target_link_libraries(SqliteConnectionTest GTest::gtest_main SqliteConnection sqlite3 FileOps)
+target_link_libraries(SqliteConnectionTest GTest::gtest_main SqliteConnection sqlite3 File)
 gtest_discover_tests(SqliteConnectionTest)

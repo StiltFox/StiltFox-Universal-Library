@@ -6,6 +6,22 @@
 using namespace StiltFox::UniversalLibrary;
 using namespace std;
 
+void SqliteConnection::forEachTable(function<void(string)> perform)
+{
+    if (connection != nullptr)
+    {
+        sqlite3* dbConnection = (sqlite3*)connection;
+        sqlite3_stmt* statement = nullptr;
+
+        if (sqlite3_prepare(dbConnection, "select tbl_name from sqlite_schema where type = 'table';", -1, &statement, NULL) == SQLITE_OK)
+        {
+            while(sqlite3_step(statement) == SQLITE_ROW) perform((char*)sqlite3_column_text(statement, 0));
+        }
+
+        sqlite3_finalize(statement);
+    }
+}
+
 bool SqliteConnection::connect()
 {
     bool output = false;
@@ -37,25 +53,16 @@ unordered_map<string, unordered_map<string, string>> SqliteConnection::getMetaDa
     {
         sqlite3* dbConnection = (sqlite3*)connection;
         sqlite3_stmt* statement = nullptr;
-        sqlite3_stmt* tableInfoStmt = nullptr;
 
-        if (sqlite3_prepare(dbConnection, "select tbl_name from sqlite_schema where type = 'table';", -1, &statement, NULL) == SQLITE_OK &&
-            sqlite3_prepare(dbConnection, "select * from pragma_table_info(?);", -1, &tableInfoStmt, nullptr) == SQLITE_OK)
-        {
-            while (sqlite3_step(statement) == SQLITE_ROW)
+        if (sqlite3_prepare(dbConnection, "select * from pragma_table_info(?);", -1, &statement, nullptr) == SQLITE_OK)
+            forEachTable([&output, statement](string table)
             {
-                string tableName = (char*)sqlite3_column_text(statement, 0);
-                sqlite3_bind_text(tableInfoStmt, 1, tableName.c_str(), tableName.size(), SQLITE_STATIC);
-                while (sqlite3_step(tableInfoStmt) == SQLITE_ROW)
-                {
-                    output[tableName][(char*)sqlite3_column_text(tableInfoStmt,1)] = (char*)sqlite3_column_text(tableInfoStmt, 2);
-                }
-                sqlite3_reset(tableInfoStmt);
-            }
-        }
+                sqlite3_bind_text(statement, 1, table.c_str(), table.size(), SQLITE_STATIC);
+                while (sqlite3_step(statement) == SQLITE_ROW) output[table][(char*)sqlite3_column_text(statement,1)] = (char*)sqlite3_column_text(statement, 2);
+                sqlite3_reset(statement);
+            });
 
         sqlite3_finalize(statement);
-        sqlite3_finalize(tableInfoStmt);
     }
 
     return output;
@@ -108,7 +115,7 @@ unordered_set<string> SqliteConnection::validate(unordered_map<string, unordered
 bool SqliteConnection::checkIfValidSqlDatabase()
 {
     File dbFile = connectionString.c_str();
-    return dbFile.readFirstNCharacters(16) == "SQLite format 3\000" || dbFile.getFileSize() == 0;
+    return dbFile.readFirstNCharacters(16) == "SQLite format 3\000" || dbFile.getSize() == 0;
 }
 
 vector<unordered_map<string,string>> SqliteConnection::performQuery(string query)
@@ -127,8 +134,7 @@ vector<unordered_map<string,string>> SqliteConnection::performQuery(string query
 
         if (sqlite3_prepare(dbConnection, query.c_str(), -1, &statement, NULL) == SQLITE_OK)
         {
-            for(int x=0; x<inputs.size(); x++)
-                sqlite3_bind_text(statement, x+1, inputs[x].c_str(), inputs[x].size(), SQLITE_STATIC);
+            for(int x=0; x<inputs.size(); x++) sqlite3_bind_text(statement, x+1, inputs[x].c_str(), inputs[x].size(), SQLITE_STATIC);
             
             while (sqlite3_step(statement) == SQLITE_ROW)
             {
@@ -147,13 +153,34 @@ vector<unordered_map<string,string>> SqliteConnection::performQuery(string query
 
 void SqliteConnection::performUpdate(string query)
 {
-    if (connection != nullptr)
+    performUpdate(query, {});
+}
+
+void SqliteConnection::performUpdate(string query, vector<string> inputs)
+{
+        if (connection != nullptr)
     {
         sqlite3* dbConnection = (sqlite3*)connection;
         sqlite3_stmt* statement = nullptr;
 
-        if (sqlite3_prepare(dbConnection, query.c_str(), -1, &statement, NULL) == SQLITE_OK) sqlite3_step(statement);
+        if (sqlite3_prepare(dbConnection, query.c_str(), -1, &statement, NULL) == SQLITE_OK)
+        {
+            for(int x=0; x<inputs.size(); x++) sqlite3_bind_text(statement, x+1, inputs[x].c_str(), inputs[x].size(), SQLITE_STATIC);
+            sqlite3_step(statement);
+        }
 
         sqlite3_finalize(statement);
     }
+}
+
+unordered_map<string,vector<unordered_map<string,string>>> SqliteConnection::getAllData()
+{
+    unordered_map<string,vector<unordered_map<string,string>>> output;
+
+    forEachTable([&output, this](string table)
+    {
+        output[table] = this->performQuery("select * from " + table + ";");
+    });
+
+    return output;
 }
