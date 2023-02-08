@@ -57,7 +57,7 @@ install(EXPORT UniversalLibrary
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/UniversalLibrary
 )
 
-set(version 0.0.1)
+set(version 0.1.0)
 
 # generate the version file for the config file
 write_basic_package_version_file(
