@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.12.0)
 project(StiltFox_Universal_Library VERSION 0.1.0)
+
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include(CTest)
+include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+set(version 0.1.0)
 
 include_directories(includes lib/sqlite)
 add_subdirectory(lib EXCLUDE_FROM_ALL)
@@ -56,8 +60,6 @@ install(EXPORT UniversalLibrary
         NAMESPACE UniversalLibrary::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/UniversalLibrary
 )
-
-set(version 0.1.0)
 
 # generate the version file for the config file
 write_basic_package_version_file(
