@@ -4,35 +4,17 @@ project(StiltFox_Universal_Library VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-include(CTest)
+include(GoogleTest)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(version 0.1.0)
 
-include_directories(includes lib/sqlite)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+include_directories(includes lib/sqlite modules/databaseconnection)
 add_subdirectory(lib EXCLUDE_FROM_ALL)
-
-if(NOT SFSkipTesting)
-  add_subdirectory(test)
-endif()
-
-add_library(File STATIC File.cpp)
-set_target_properties(File PROPERTIES PUBLIC_HEADER "includes/File.hpp")
-target_include_directories(File PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-
-add_library(SFCrypto STATIC Crypto.cpp)
-target_link_libraries(SFCrypto cryptopp)
-set_target_properties(SFCrypto PROPERTIES PUBLIC_HEADER "includes/SFCrypto.hpp")
-target_include_directories(SFCrypto PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-
-add_library(SqliteConnection STATIC SqliteConnection.cpp)
-target_link_libraries(SqliteConnection sqlite3 File)
-set_target_properties(SqliteConnection PROPERTIES PUBLIC_HEADER "includes/DatabaseConnection.hpp")
-target_include_directories(SqliteConnection PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-
-add_library(Color STATIC Color.cpp)
-set_target_properties(Color PROPERTIES PUBLIC_HEADER "includes/Color.hpp")
-target_include_directories(Color PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+add_subdirectory(modules)
 
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/UniversalLibraryConfig.cmake"
@@ -46,7 +28,7 @@ install(FILES
 )
 
 install(
-    TARGETS File SFCrypto SqliteConnection sqlite3 Color cryptopp
+    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor cryptopp
     EXPORT UniversalLibrary
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
