@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
-#include "DatabaseConnection.hpp"
+#include "SqliteConnection.hpp"
 
 using namespace StiltFox::UniversalLibrary;
 using namespace std;

@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <ctime>
-#include "Color.hpp"
+#include "SFColor.hpp"
 
 using namespace StiltFox::UniversalLibrary;
 using namespace std;

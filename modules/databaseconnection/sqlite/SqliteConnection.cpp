@@ -1,6 +1,6 @@
 #include <filesystem>
 #include <sqlite3.h>
-#include "DatabaseConnection.hpp"
+#include "SqliteConnection.hpp"
 #include "File.hpp"
 
 using namespace StiltFox::UniversalLibrary;
