@@ -1,0 +1,10 @@
+add_library(httpmessage HttpMessage.cpp)
+target_link_libraries(httpmessage stringutilities)
+set_target_properties(httpmessage PROPERTIES PUBLIC_HEADER "HttpMessage.hpp")
+target_include_directories(httpmessage PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+if(NOT SFSkipTesting EQUAL True)
+    add_executable(httpmessagetest HttpMessageTest.cpp)
+    target_link_libraries(httpmessagetest GTest::gtest_main httpmessage stringutilities)
+    gtest_discover_tests(httpmessagetest)
+endif()

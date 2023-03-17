@@ -8,11 +8,12 @@ include(GoogleTest)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(version 0.1.0)
+enable_testing()
 
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-include_directories(includes lib/sqlite modules/databaseconnection)
+include_directories(lib/sqlite modules/databaseconnection modules/stringutilites)
 add_subdirectory(lib EXCLUDE_FROM_ALL)
 add_subdirectory(modules)
 
@@ -28,7 +29,7 @@ install(FILES
 )
 
 install(
-    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor cryptopp
+    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor cryptopp httpmessage stringutilities
     EXPORT UniversalLibrary
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
