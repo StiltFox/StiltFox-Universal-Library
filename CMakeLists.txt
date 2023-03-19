@@ -17,7 +17,7 @@ include_directories(lib/sqlite modules/databaseconnection modules/stringutilites
 add_subdirectory(lib EXCLUDE_FROM_ALL)
 add_subdirectory(modules)
 
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake_files/Config.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/UniversalLibraryConfig.cmake"
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/UniversalLibrary
 )
