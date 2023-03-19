@@ -1,9 +1,9 @@
 add_library(SFCrypto STATIC SFCrypto.cpp)
 target_link_libraries(SFCrypto cryptopp)
-set_target_properties(SFCrypto PROPERTIES PUBLIC_HEADER "SFCrypto.hpp")
+set_target_properties(SFCrypto PROPERTIES PUBLIC_HEADER "modules/sfcrypto/SFCrypto.hpp")
 target_include_directories(SFCrypto PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-if(NOT SFSkipTesting EQUAL True)
+if(NOT SFSkipTesting)
     add_executable(SFCryptoTest SFCryptoTest.cpp)
     target_link_libraries(SFCryptoTest GTest::gtest_main SFCrypto)
     gtest_discover_tests(SFCryptoTest)
