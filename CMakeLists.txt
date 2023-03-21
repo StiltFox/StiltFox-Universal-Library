@@ -4,19 +4,24 @@ project(StiltFox_Universal_Library VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-include(GoogleTest)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(version 0.1.0)
 
+if(NOT SFSkipTesting)
+message(STATUS ${SFSkipTesting})
+  include(GoogleTest)
+  enable_testing()
+endif()
+
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-include_directories(includes lib/sqlite modules/databaseconnection)
+include_directories(lib/sqlite modules/databaseconnection modules/stringutilites modules/file)
 add_subdirectory(lib EXCLUDE_FROM_ALL)
 add_subdirectory(modules)
 
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake_files/Config.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/UniversalLibraryConfig.cmake"
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/UniversalLibrary
 )
@@ -28,13 +33,13 @@ install(FILES
 )
 
 install(
-    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor cryptopp
+    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor cryptopp httpmessage stringutilities
     EXPORT UniversalLibrary
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/Stilt_Fox/UniversalLibrary
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Stilt_Fox/UniversalLibrary
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/Stilt_Fox/UniversalLibrary
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Stilt_Fox/UniversalLibrary
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Stilt_Fox/UniversalLibrary
 )
 
 install(EXPORT UniversalLibrary

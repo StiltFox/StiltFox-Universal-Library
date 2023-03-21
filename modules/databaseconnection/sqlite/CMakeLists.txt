@@ -1,9 +1,9 @@
 add_library(SqliteConnection STATIC SqliteConnection.cpp)
 target_link_libraries(SqliteConnection sqlite3 File)
-set_target_properties(SqliteConnection PROPERTIES PUBLIC_HEADER "SqliteConnection.hpp;../DatabaseConnection.hpp")
+set_target_properties(SqliteConnection PROPERTIES PUBLIC_HEADER "modules/databaseconnection/sqlite/SqliteConnection.hpp;modules/databaseconnection/DatabaseConnection.hpp")
 target_include_directories(SqliteConnection PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-if(NOT SFSkipTesting EQUAL True)
+if(NOT SFSkipTesting)
     add_executable(SqliteConnectionTest SqliteConnectionTest.cpp)
     target_link_libraries(SqliteConnectionTest GTest::gtest_main SqliteConnection sqlite3 File)
     gtest_discover_tests(SqliteConnectionTest)
