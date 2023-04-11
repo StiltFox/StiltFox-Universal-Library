@@ -17,7 +17,7 @@ endif()
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-include_directories(lib/sqlite modules/databaseconnection modules/stringutilites modules/file)
+include_directories(lib/sqlite modules/databaseconnection modules/stringutilites modules/file modules/logging modules/logging/filelogger)
 add_subdirectory(lib EXCLUDE_FROM_ALL)
 add_subdirectory(modules)
 
@@ -33,7 +33,7 @@ install(FILES
 )
 
 install(
-    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor cryptopp httpmessage stringutilities
+    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor cryptopp httpmessage stringutilities Logger FileLogger
     EXPORT UniversalLibrary
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/Stilt_Fox/UniversalLibrary
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Stilt_Fox/UniversalLibrary

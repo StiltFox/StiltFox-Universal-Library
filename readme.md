@@ -5,7 +5,7 @@ Stilt Fox™ is not liable for any damages done to your hardware. For more infor
 
 Stilt Fox™ is trademarked. You may not use the Stilt Fox™ name, however this code is free to reference and use.
 
-You may contribute to this library, however all contributions will share the same licens as this library and you agree that Stilt Fox™ owns the copyright for any contributions.
+You may contribute to this library, however all contributions will share the same license as this library and you agree that Stilt Fox™ owns the copyright for any contributions.
 
 This library is not yet public as it contains code that is not ours in the lib folder. We wish to rectify this before going public. If you distribute this library before release charges will be pressed. Thank you for understanding.
 
