@@ -12,6 +12,6 @@ void FileLogger::printOut(Level logLevel, string message)
 {
     if (logFile.exists() || create)
     {
-        logFile.append("\n" + stringValues[logLevel] + ": " + message + "\n");
+        logFile.append("\n" + stringValues.at(logLevel) + ": " + message + "\n");
     }
 }
