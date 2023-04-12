@@ -1,7 +1,7 @@
 #ifndef StiltFox_UniversalLibrary_FileLogger
 #define StiltFox_UniversalLibrary_FileLogger
 #include "File.hpp"
-#include "logger.hpp"
+#include "Logger.hpp"
 
 namespace StiltFox
 {

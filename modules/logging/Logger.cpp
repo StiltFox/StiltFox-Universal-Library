@@ -1,5 +1,5 @@
 #include <iostream>
-#include "logger.hpp"
+#include "Logger.hpp"
 
 using namespace std;
 using namespace StiltFox::UniversalLibrary;
