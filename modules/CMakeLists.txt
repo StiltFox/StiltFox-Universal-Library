@@ -1,3 +1,4 @@
+add_subdirectory(testing)
 add_subdirectory(file)
 add_subdirectory(sfcrypto)
 add_subdirectory(databaseconnection)

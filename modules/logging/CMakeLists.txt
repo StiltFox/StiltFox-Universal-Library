@@ -6,6 +6,6 @@ add_subdirectory(filelogger)
 
 if(NOT SFSkipTesting)
     add_executable(LoggerTest LoggerTest.cpp)
-    target_link_libraries(LoggerTest GTest::gtest_main Logger)
+    target_link_libraries(LoggerTest GTest::gtest_main Logger CoutCapture)
     gtest_discover_tests(LoggerTest)
 endif()
