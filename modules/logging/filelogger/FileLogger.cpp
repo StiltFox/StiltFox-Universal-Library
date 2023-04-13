@@ -10,8 +10,14 @@ FileLogger::FileLogger(string filePath, bool create, Level suppressionLevel) : L
 
 void FileLogger::printOut(Level logLevel, string message)
 {
-    if (logFile.exists() || create)
+    if (logFile.canWrite() && (logFile.exists() || create))
     {
-        logFile.append("\n" + stringValues.at(logLevel) + ": " + message + "\n");
+        if (logFile.readFirstNCharacters(1) != "") logFile.append("\n");
+        logFile.append(stringValues.at(logLevel) + ": " + message + "\n");
+    }
+    else
+    {
+        Logger::printOut(Logger::ERROR, "could not write to log file " + logFile.getPath());
+        Logger::printOut(logLevel, message);
     }
 }

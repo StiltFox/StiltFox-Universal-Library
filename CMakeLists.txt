@@ -36,7 +36,7 @@ install(FILES
 )
 
 install(
-    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor httpmessage stringutilities Logger FileLogger CoutCapture
+    TARGETS File SFCrypto SqliteConnection sqlite3 SFColor httpmessage stringutilities Logger FileLogger CoutCapture TempFile
     EXPORT UniversalLibrary
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/Stilt_Fox/UniversalLibrary
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Stilt_Fox/UniversalLibrary

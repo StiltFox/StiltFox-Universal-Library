@@ -5,6 +5,6 @@ target_include_directories(FileLogger PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_
 
 if(NOT SFSkipTesting)
     add_executable(FileLoggerTest FileLoggerTest.cpp)
-    target_link_libraries(FileLoggerTest GTest::gtest_main FileLogger File CoutCapture)
+    target_link_libraries(FileLoggerTest GTest::gtest_main FileLogger File CoutCapture TempFile)
     gtest_discover_tests(FileLoggerTest)
 endif()
