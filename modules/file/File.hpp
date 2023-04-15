@@ -30,6 +30,7 @@ namespace StiltFox
             bool append(std::string);
             std::string read();
             std::string readFirstNCharacters(int);
+            std::string readLastNCharacters(int);
             std::string getPath();
 
             std::string getExtension();

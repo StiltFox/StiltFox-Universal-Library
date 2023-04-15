@@ -12,7 +12,7 @@ void FileLogger::printOut(Level logLevel, string message)
 {
     if (logFile.canWrite() && (logFile.exists() || create))
     {
-        if (logFile.readFirstNCharacters(1) != "") logFile.append("\n");
+        if (logFile.getSize() > 0 && logFile.readLastNCharacters(1) != "\n") logFile.append("\n");
         logFile.append(stringValues.at(logLevel) + ": " + message + "\n");
     }
     else

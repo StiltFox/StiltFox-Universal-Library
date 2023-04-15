@@ -1157,6 +1157,62 @@ TEST(File, readFirstNCharacters_will_return_whole_file_if_negative_size_is_passe
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////File readLastNCharacters tests/////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST(File, readLastNCharacters_will_only_read_the_last_specified_characters)
+{
+    //given we have a really really long file
+    ofstream longFile(".FileOps_ReadLastNChars_longfile");
+    longFile << "this is a very long file\n with some file breaks here and there\n";
+    longFile.close();
+    File file = ".FileOps_ReadLastNChars_longfile";
+
+    //when we read the last n bytes
+    string actual = file.readLastNCharacters(6);
+
+    //then we get back the last 6 characters
+    ASSERT_EQ(actual, "there\n");
+    filesystem::remove_all(".FileOps_ReadLastNChars_longfile");
+}
+
+TEST(File, readLastNCharacters_will_only_return_what_is_in_the_file_if_the_file_is_too_small)
+{
+    //given we have a short file
+    ofstream shortFile(".FileOps_ReadLastNChars_shortfile");
+    shortFile << "apples";
+    shortFile.close();
+    File file = ".FileOps_ReadLastNChars_shortfile";
+
+    //when we read too many chars
+    string actual = file.readLastNCharacters(88);
+
+    //then we get back what's in the file
+    ASSERT_EQ(actual, "apples");
+    filesystem::remove_all(".FileOps_ReadLastNChars_shortfile");
+}
+
+TEST(File, readLastNCharacters_will_return_whole_file_if_negative_size_is_passed_in)
+{
+    //given we have a file
+    ofstream someFile(".FileOps_ReadLastNCharacters_full_file");
+    someFile << "under no circumstances should SCP-009 breach containment";
+    someFile.close();
+    File file = ".FileOps_ReadLastNCharacters_full_file";
+
+    //when we try to read a negative number of characters
+    string actual = file.readLastNCharacters(-1);
+
+    //then we get back what's in the file
+    ASSERT_EQ(actual, "under no circumstances should SCP-009 breach containment");
+    filesystem::remove_all(".FileOps_ReadLastNCharacters_full_file");
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////File getPath tests///////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

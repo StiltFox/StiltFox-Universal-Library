@@ -9,7 +9,7 @@ namespace StiltFox
     {
         struct FileLogger : public Logger
         {
-            FileLogger(std::string filePath, bool create, Level suppressionLevel);
+            FileLogger(std::string filePath, bool create = true, Level suppressionLevel = ERROR);
 
             protected:
             virtual void printOut(Level logLevel, std::string message);

@@ -223,3 +223,31 @@ string File::readFirstNCharacters(int numChars)
 
     return output;
 }
+
+string File::readLastNCharacters(int numChars)
+{
+    string output;
+
+    if(exists() && !isDirectory())
+    {
+        ifstream stream(path, ios::in | ios::binary | ios::ate);
+
+        if (stream.is_open())
+        {
+            int fileSize = stream.tellg();
+            int readSize = fileSize < numChars || numChars < 0 ? fileSize : numChars;
+
+            char* buffer = new char[readSize + 1];
+            memset(buffer, 0, readSize+1);
+
+            stream.seekg(-readSize, ios::end);
+            stream.read(buffer, readSize);
+            stream.close();
+
+            output = buffer;
+            delete[] buffer;
+        }
+    }
+
+    return output;
+}
