@@ -54,13 +54,25 @@ void Logger::error(string message)
     printOut(ERROR, message);
 }
 
+void Logger::bypass(string message)
+{
+    printOut(INFO, message, true);
+}
+
 string Logger::getLevelAsString(Level level)
 {
     return stringValues.at(level);
 }
 
-void Logger::printOut(Level logLevel, string message)
+void Logger::printOut(Level logLevel, string message, bool bypass)
 {
-    if (logLevel >= suppressionLevel)
-        cout << stringValues.at(logLevel) << ": " << cleanString(message) << endl;
+    if (bypass)
+    {
+        cout << message << endl;
+    }
+    else
+    {
+        if (logLevel >= suppressionLevel)
+            cout << stringValues.at(logLevel) << ": " << cleanString(message) << endl;
+    }
 }

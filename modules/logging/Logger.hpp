@@ -17,10 +17,11 @@ namespace StiltFox
             void info(std::string message);
             void warn(std::string message);
             void error(std::string message);
+            void bypass(std::string message);
             static std::string getLevelAsString(Level level);
 
             protected:
-            virtual void printOut(Level logLevel, std::string message);
+            virtual void printOut(Level logLevel, std::string message, bool bypass = false);
             static const std::unordered_map<Logger::Level, std::string> stringValues;
         };
     }

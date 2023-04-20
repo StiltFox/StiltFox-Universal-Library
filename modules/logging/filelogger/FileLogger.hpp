@@ -12,7 +12,7 @@ namespace StiltFox
             FileLogger(std::string filePath, bool create = true, Level suppressionLevel = ERROR);
 
             protected:
-            virtual void printOut(Level logLevel, std::string message);
+            virtual void printOut(Level logLevel, std::string message, bool bypass=false);
 
             private:
             File logFile;
