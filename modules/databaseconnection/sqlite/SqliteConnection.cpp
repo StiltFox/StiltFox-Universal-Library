@@ -58,7 +58,11 @@ unordered_map<string, unordered_map<string, string>> SqliteConnection::getMetaDa
             forEachTable([&output, statement](string table)
             {
                 sqlite3_bind_text(statement, 1, table.c_str(), table.size(), SQLITE_STATIC);
-                while (sqlite3_step(statement) == SQLITE_ROW) output[table][(char*)sqlite3_column_text(statement,1)] = (char*)sqlite3_column_text(statement, 2);
+                while (sqlite3_step(statement) == SQLITE_ROW) 
+                {
+                    char* columnText = (char*)sqlite3_column_text(statement, 2);
+                    output[table][(char*)sqlite3_column_text(statement,1)] = columnText == nullptr ? "" : columnText;
+                }
                 sqlite3_reset(statement);
             });
 
@@ -141,7 +145,10 @@ vector<unordered_map<string,string>> SqliteConnection::performQuery(string query
                 int columns = sqlite3_data_count(statement);
                 output.push_back({});
                 for (int z=0; z < columns; z++)
-                    output[output.size()-1][(char*)sqlite3_column_name(statement, z)] = (char*)sqlite3_column_text(statement, z);
+                {
+                    char* columnValue = (char*)sqlite3_column_text(statement, z);
+                    output[output.size()-1][(char*)sqlite3_column_name(statement, z)] = columnValue == nullptr ? "" : columnValue;
+                }
             }
         }
 
