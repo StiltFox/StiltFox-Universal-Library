@@ -35,5 +35,9 @@ Right now the only supported installation method is an sh script that runs on li
 ### modules
 This is where the majority of the code is at. This folder contains the code that we wrote. There will be more readme files in there, with information specific to each library.
 
+Below is a list of modules:
+
+* [Testing](modules/testing)
+
 ### cmake_files
 This folder just contains some experimental build files.
