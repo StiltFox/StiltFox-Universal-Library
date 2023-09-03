@@ -3,3 +3,5 @@ build
 .vscode
 buildWin
 buildMac
+cmake-build-debug
+.idea
